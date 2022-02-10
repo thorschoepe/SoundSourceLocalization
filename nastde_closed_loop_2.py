@@ -70,7 +70,7 @@ def histogram_overlay(spiketimes,populations_size, simtime, x_labels, y_labels, 
 
 
 
-simtime = 20000 # Simulation time [ms]
+simtime = 40000 # Simulation time [ms]
 timestep = 1
 p.setup(timestep) # Simulate with 1 ms time step
 
@@ -210,7 +210,7 @@ class CellParams:
 # connections ################################################################################################################################
 
 bump_to_output_ratio = 4 # was 9
-num_channels = 8
+num_channels = divisor =  1
 num_tdes = 4   
 class Connect:
 	p_en_l_2_e_pg = [(i, (i+1), 0.5, 1) for i in range(Size.p_en-1)]
@@ -225,8 +225,8 @@ class Connect:
 	tde_2_out_l = []
 	for z in range(num_channels):
 		for i in range(1,4,1):
-			tde_2_out_r.append([i+(z*num_tdes*2),0,50/num_channels,1])
-			tde_2_out_l.append([i+4+(z*num_tdes*2),0,50/num_channels,1])
+			tde_2_out_r.append([i+(z*num_tdes*2),0,50/divisor,1])
+			tde_2_out_l.append([i+4+(z*num_tdes*2),0,50/divisor,1])
 			
 	print tde_2_out_r
 	tde_2_wta_r = [[i,0,10,1] for i in range(0,4,1)]
@@ -302,16 +302,16 @@ p.Projection(Populations.spike_source, Populations.p_en_right, p.FromListConnect
 
 p.Projection(Populations.tde_out, Populations.tde_in, p.OneToOneConnector(),p.StaticSynapse(weight=0.3, delay = 1), receptor_type = 'excitatory')
 
-num_channels = 8
-num_tdes = 4
-for i in range(num_channels):
-	p.Projection(Populations.tde_in, Populations.out_r, p.FromListConnector([[3+(num_channels*num_tdes*2),0,200/num_channels,1]]),p.StaticSynapse(), receptor_type='excitatory') 
-	p.Projection(Populations.tde_in, Populations.out_l, p.FromListConnector([[3+(num_channels*num_tdes*2),0,200/num_channels,1]]),p.StaticSynapse(), receptor_type='excitatory') 
-	p.Projection(Populations.tde_in, Populations.out_r, p.FromListConnector([[7+(num_channels*num_tdes*2),0,200/num_channels,1]]),p.StaticSynapse(), receptor_type='excitatory') 
-	p.Projection(Populations.tde_in, Populations.out_l, p.FromListConnector([[7+(num_channels*num_tdes*2),0,200/num_channels,1]]),p.StaticSynapse(), receptor_type='excitatory') 
 
-	p.Projection(Populations.tde_in, Populations.out_r, p.FromListConnector([[0+(num_channels*num_tdes*2),0,200/num_channels,1]]), p.StaticSynapse(), receptor_type='inhibitory') # was 150
-	p.Projection(Populations.tde_in, Populations.out_l, p.FromListConnector([[4+(num_channels*num_tdes*2),0,200/num_channels,1]]), p.StaticSynapse(), receptor_type='inhibitory') # was 150
+
+for i in range(num_channels):
+	p.Projection(Populations.tde_in, Populations.out_r, p.FromListConnector([[3+((num_channels-1)*num_tdes*2),0,200/divisor,1]]),p.StaticSynapse(), receptor_type='excitatory') 
+	p.Projection(Populations.tde_in, Populations.out_l, p.FromListConnector([[3+((num_channels-1)*num_tdes*2),0,200/divisor,1]]),p.StaticSynapse(), receptor_type='excitatory') 
+	p.Projection(Populations.tde_in, Populations.out_r, p.FromListConnector([[7+((num_channels-1)*num_tdes*2),0,200/divisor,1]]),p.StaticSynapse(), receptor_type='excitatory') 
+	p.Projection(Populations.tde_in, Populations.out_l, p.FromListConnector([[7+((num_channels-1)*num_tdes*2),0,200/divisor,1]]),p.StaticSynapse(), receptor_type='excitatory') 
+
+	p.Projection(Populations.tde_in, Populations.out_r, p.FromListConnector([[0+((num_channels-1)*num_tdes*2),0,200/divisor,1]]), p.StaticSynapse(), receptor_type='inhibitory') # was 150
+	p.Projection(Populations.tde_in, Populations.out_l, p.FromListConnector([[4+((num_channels-1)*num_tdes*2),0,200/divisor,1]]), p.StaticSynapse(), receptor_type='inhibitory') # was 150
 	p.Projection(Populations.tde_in, Populations.out_r, p.FromListConnector(Connect.tde_2_out_l), p.StaticSynapse(), receptor_type='inhibitory')
 	p.Projection(Populations.tde_in, Populations.out_l, p.FromListConnector(Connect.tde_2_out_r), p.StaticSynapse(), receptor_type='inhibitory')
 
@@ -327,8 +327,8 @@ p.Projection(Populations.out_l, Populations.out_r, p.AllToAllConnector(),p.Stati
 		
 		
 # out to ring attractor
-p.Projection(Populations.out_l, Populations.p_en_right, p.AllToAllConnector(),p.StaticSynapse(weight = 1.0, delay = 1), receptor_type='excitatory') # was 1.0
-p.Projection(Populations.out_r, Populations.p_en_left, p.AllToAllConnector(),p.StaticSynapse(weight = 1.0, delay = 1), receptor_type='excitatory')
+p.Projection(Populations.out_l, Populations.p_en_right, p.AllToAllConnector(),p.StaticSynapse(weight = 0.8, delay = 1), receptor_type='excitatory') # was 1.0
+p.Projection(Populations.out_r, Populations.p_en_left, p.AllToAllConnector(),p.StaticSynapse(weight = 0.8, delay = 1), receptor_type='excitatory')
 
 
 
