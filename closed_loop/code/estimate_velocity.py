@@ -269,6 +269,25 @@ for frequ in range(len(frequency)):
 	sorted_pairs = sorted(zipped_lists)
 	tuples = zip(*sorted_pairs)
 	angle_start,velocity_all,velocity_all_2, velocity_all_3, velocity_all_4, velocity_all_5 = [ list(tuple) for tuple in  tuples]
+	
+	fig4 = plt.figure(figsize =(4,4), dpi=300)
+	plt.rc("font", size=10)
+	ax4 = fig4.add_subplot(111)
+	ax4.plot(angle_start, velocity_all, marker = '.', color = colors[0])
+	ax4.plot(angle_start, velocity_all_2, marker = '.', color = colors[1])
+	ax4.plot(angle_start, velocity_all_3, marker = '.', color = colors[2])
+	ax4.plot(angle_start, velocity_all_4, marker = '.', color = colors[3])
+	ax4.plot(angle_start, velocity_all_5, marker = '.', color = colors[4])
+	ax4.plot(angle_start, velocity_all, color = colors[0])
+	ax4.plot(angle_start, velocity_all_2, color = colors[1])
+	ax4.plot(angle_start, velocity_all_3, color = colors[2])
+	ax4.plot(angle_start, velocity_all_4, color = colors[3])
+	ax4.plot(angle_start, velocity_all_5, color = colors[4])
+	ax4.legend(handles=[patch1, patch2, patch3, patch4, patch5], fontsize='x-small')
+	ax4.set_ylabel('velocity (deg/s)')
+	ax4.set_xlabel('start angle (deg)')
+	fig4.tight_layout()
+	fig4.savefig('/home/spinnaker/Documents/projects/Sevilla_2021_TDE_SSL/data/final/closed_loop/'+str(frequency[frequ])+'Hz/results/velocity_'+str(frequency[frequ])+'Hz.png', dpi=300)
 
 
 
